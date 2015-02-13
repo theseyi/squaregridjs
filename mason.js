@@ -7,8 +7,8 @@
 //
 /////////////////////////////////////////
 
-(function($) {
-  $.fn.mason = function(options, complete) {
+(function ($) {
+  $.fn.mason = function (options, complete) {
 
     var defaults = {
       itemSelector: null,
@@ -42,7 +42,7 @@
     if (complete) {
       var callback = {
         complete: complete
-      }
+      };
     }
 
     var elements = {
@@ -53,8 +53,7 @@
       matrix: []
     };
 
-
-    return this.each(function() {
+    return this.each(function () {
       var settings, callbacks, $self;
 
       settings = $.extend(defaults, options);
@@ -72,11 +71,13 @@
          * Define our container element.
          * Note we append a clear div in order to get a height later on, VERY IMPORTANT!
          */
-        if ($self.children(".mason_clear").length < 1) {
+        if ($self.children(".mason_clear")
+          .length < 1) {
           $self.append("<div class='mason_clear' style='clear:both;position:relative;'></div>");
         }
 
-        elements.block.height = parseFloat((($self.width() / columnSize()) / settings.ratio).toFixed(0));
+        elements.block.height = parseFloat((($self.width() / columnSize()) / settings.ratio)
+          .toFixed(0));
         elements.block.width = parseFloat(($self.width() / columnSize()));
 
         // Size Elements
@@ -110,44 +111,46 @@
            * Loop over each element, size, place, and fill out matrix information.
            */
 
-          $self.children(settings.itemSelector).each(function() {
-            var $sel = $(this);
+          $self.children(settings.itemSelector)
+            .each(function () {
+              var $sel = $(this);
 
-            // pick a random number between 0 and the length of sizes ( - the promoted size! )
-            var ran;
-            if (settings.randomSizes) {
-              ran = Math.floor(Math.random() * (settings.sizes.length - settings.promoted.length));
-            } else {
-
-              ran = $sel.data("layout");
-              if (typeof(ran) == 'undefined') {
+              // pick a random number between 0 and the length of sizes ( - the promoted size! )
+              var ran;
+              if (settings.randomSizes) {
                 ran = Math.floor(Math.random() * (settings.sizes.length - settings.promoted.length));
+              } else {
+
+                ran = $sel.data("layout");
+                if (typeof (ran) == 'undefined') {
+                  ran = Math.floor(Math.random() * (settings.sizes.length - settings.promoted.length));
+                }
               }
-            }
-            ranSize = settings.sizes[ran];
+              ranSize = settings.sizes[ran];
 
-            for (var i = 0; i < settings.promoted.length; i++) {
-              if ($sel.hasClass(settings.promoted[i][2])) {
-                ranSize = [settings.promoted[i][0], settings.promoted[i][1]];
-                ran = (settings.sizes.length - settings.promoted.length) + i;
+              for (var i = 0; i < settings.promoted.length; i++) {
+                if ($sel.hasClass(settings.promoted[i][2])) {
+                  ranSize = [settings.promoted[i][0], settings.promoted[i][1]];
+                  ran = (settings.sizes.length - settings.promoted.length) + i;
+                }
               }
-            }
 
-            $sel.data('size', ran);
+              $sel.data('size', ran);
 
-            var h = parseFloat((elements.block.height * ranSize[1]).toFixed(2));
-            h = h - (settings.gutter * 2);
+              var h = parseFloat((elements.block.height * ranSize[1])
+                .toFixed(2));
+              h = h - (settings.gutter * 2);
 
-            var w = parseFloat((elements.block.width * ranSize[0]));
-            w = w - (settings.gutter * 2);
+              var w = parseFloat((elements.block.width * ranSize[0]));
+              w = w - (settings.gutter * 2);
 
-            $sel.height(h + 'px');
-            $sel.width(w + 'px');
+              $sel.height(h + 'px');
+              $sel.width(w + 'px');
 
-            $sel.css({
-              'margin': (settings.gutter)
+              $sel.css({
+                'margin': (settings.gutter)
+              });
             });
-          });
 
           /*
            * Build a matrix of our data and space
@@ -169,80 +172,87 @@
           /*
            * Populate the matrix
            */
-          $self.children(settings.itemSelector).each(function() {
-            $sel = $(this);
-            // Start by calculating the position based on block dimensions
-            // @ t = top ( row )
-            // @ l = left ( column )
-            var l = Math.round($sel.position().left / elements.block.width);
-            var t = Math.round($sel.position().top / elements.block.height);
-            var y2 = Math.round($sel.position().top + $sel.height()) + settings.gutter * 2;
-            var x2 = Math.round($sel.position().left + $sel.width()) + settings.gutter * 2;
+          $self.children(settings.itemSelector)
+            .each(function () {
+              $sel = $(this);
+              // Start by calculating the position based on block dimensions
+              // @ t = top ( row )
+              // @ l = left ( column )
+              var l = Math.round($sel.position()
+                .left / elements.block.width);
+              var t = Math.round($sel.position()
+                .top / elements.block.height);
+              var y2 = Math.round($sel.position()
+                .top + $sel.height()) + settings.gutter * 2;
+              var x2 = Math.round($sel.position()
+                .left + $sel.width()) + settings.gutter * 2;
 
-            // Remove elements that don't fall within the container elements height constraint
-            if (settings.constrain.height) {
-              if (t >= block_h || y2 / elements.block.height > block_h) {
-                $sel.remove();
-                return true;
-              }
-            }
-
-
-            // turn the data size into a number
-            var s = parseFloat($sel.data('size'));
-
-            // now determine size of the element based on block dimensions and total area
-            var h = settings.sizes[s][1];
-            var w = settings.sizes[s][0];
-            var a = h * w;
-
-            // Loop through the elements area and based on the size
-            // populate the matrix.
-            // Start with rows move to columns
-            for (var i = 0; i < a; i++) {
-              for (var bh = 0; bh < h; bh++) {
-                elements.matrix[t + bh][l] = true;
-                for (var bw = 0; bw < w; bw++) {
-                  elements.matrix[t + bh][l + bw] = true;
+              // Remove elements that don't fall within the container elements height constraint
+              if (settings.constrain.height) {
+                if (t >= block_h || y2 / elements.block.height > block_h) {
+                  $sel.remove();
+                  return true;
                 }
               }
-            }
-          });
+
+              // turn the data size into a number
+              var s = parseFloat($sel.data('size'));
+
+              // now determine size of the element based on block dimensions and total area
+              var h = settings.sizes[s][1];
+              var w = settings.sizes[s][0];
+              var a = h * w;
+
+              // Loop through the elements area and based on the size
+              // populate the matrix.
+              // Start with rows move to columns
+              for (var i = 0; i < a; i++) {
+                for (var bh = 0; bh < h; bh++) {
+                  elements.matrix[t + bh][l] = true;
+                  for (var bw = 0; bw < w; bw++) {
+                    elements.matrix[t + bh][l + bw] = true;
+                  }
+                }
+              }
+            });
 
           /*
            * Create filler blocks to seal up empty spaces based on matrix
            * This goes column by column to analyze true / false booleans in matrix
            */
-          var fillerNum = $(settings.filler.itemSelector).length;
+          var fillerNum = $(settings.filler.itemSelector)
+            .length;
           for (var i = 0; i < elements.matrix.length; i++) {
             for (var c = 0; c < elements.matrix[i].length; c++) {
 
               /*
                * Blank space detected
                */
-              if (elements.matrix[i][c] == false) {
+              if (elements.matrix[i][c] === false) {
 
                 // get block dimensions
                 var h = parseFloat(elements.block.height),
                   w = parseFloat(elements.block.width);
 
                 // determine position
-                var x = parseFloat((i * h).toFixed(2)) + settings.gutter,
+                var x = parseFloat((i * h)
+                    .toFixed(2)) + settings.gutter,
                   y = parseFloat((c * w)) + settings.gutter,
                   ran, filler;
-
 
                 h = h - (settings.gutter * 2);
                 w = w - (settings.gutter * 2);
 
-
                 if (settings.randomFillers) {
-                  ran = Math.floor(Math.random() * $(settings.filler.itemSelector).length);
+                  ran = Math.floor(Math.random() * $(settings.filler.itemSelector)
+                    .length);
                 } else {
                   ran = fillerNum - 1;
                 }
 
-                filler = $(settings.filler.itemSelector).eq(ran).clone(settings.filler.keepDataAndEvents);
+                filler = $(settings.filler.itemSelector)
+                  .eq(ran)
+                  .clone(settings.filler.keepDataAndEvents);
 
                 filler.addClass(settings.filler.filler_class);
                 filler.css({
@@ -258,11 +268,11 @@
               }
             }
           }
-          if (callbacks.complete != null) {
+          if (callbacks.complete !== null) {
             callbacks.complete();
           }
         }
-      };
+      }
 
       /*
        * Determine Our Columns
@@ -278,19 +288,19 @@
         } else {
           for (var i = 0; i <= colsCount; i++) {
             if (w > settings.columns[i][0] && w < settings.columns[i][1]) {
-              cols = settings.columns[i][2]
+              cols = settings.columns[i][2];
             }
           }
         }
         return cols;
-      };
+      }
 
       /*
        * Baked in utils
        */
-      var waitForFinalEvent = (function() {
+      var waitForFinalEvent = (function () {
         var timers = {};
-        return function(callback, ms, uniqueId) {
+        return function (callback, ms, uniqueId) {
           if (!uniqueId) {
             uniqueId = random();
           }
@@ -300,25 +310,26 @@
           timers[uniqueId] = setTimeout(callback, ms);
         };
       })();
-      var random = function() {
-          var text = "";
-          var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-          for (var i = 0; i < 5; i++)
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-          return text;
-        }
-        // check layout
+      var random = function () {
+        return new Array(1, 2, 3, 4, 5)
+          .map(function (el) {
+            return String.fromCharCode(Math.floor(Math.random() * 26 + 97));
+          })
+          .join('');
+      };
+      // check layout
       if (settings.layout == "fluid") {
-        $(window).resize(function() {
-          $('.' + settings.filler.filler_class).remove();
-          elements.matrix = [];
-          waitForFinalEvent(function() {
-            $('.' + settings.filler.filler_class).remove();
-            setup();
-          }, 150)
-        });
+        $(window)
+          .resize(function () {
+            $('.' + settings.filler.filler_class)
+              .remove();
+            elements.matrix = [];
+            waitForFinalEvent(function () {
+              $('.' + settings.filler.filler_class)
+                .remove();
+              setup();
+            }, 150);
+          });
       }
       setup();
     });
