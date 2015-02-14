@@ -162,10 +162,10 @@
           var block_h = (el_h / elements.block.height);
 
           elements.matrix = [];
-          for (var i = 0; i < block_h; i++) {
+          for (var b = 0; b < block_h; b++) {
             elements.matrix[i] = [];
             for (var c = 0; c < col; c++) {
-              elements.matrix[i][c] = false;
+              elements.matrix[b][c] = false;
             }
           }
 
@@ -222,22 +222,22 @@
            */
           var fillerNum = $(settings.filler.itemSelector)
             .length;
-          for (var i = 0; i < elements.matrix.length; i++) {
-            for (var c = 0; c < elements.matrix[i].length; c++) {
+          for (var j = 0; j < elements.matrix.length; j++) {
+            for (var k = 0; k < elements.matrix[j].length; k++) {
 
               /*
                * Blank space detected
                */
-              if (elements.matrix[i][c] === false) {
+              if (elements.matrix[j][k] === false) {
 
                 // get block dimensions
                 var h = parseFloat(elements.block.height),
                   w = parseFloat(elements.block.width);
 
                 // determine position
-                var x = parseFloat((i * h)
+                var x = parseFloat((j * h)
                     .toFixed(2)) + settings.gutter,
-                  y = parseFloat((c * w)) + settings.gutter,
+                  y = parseFloat((k * w)) + settings.gutter,
                   ran, filler;
 
                 h = h - (settings.gutter * 2);
@@ -261,7 +261,7 @@
                   'left': y + 'px',
                   'height': h + 'px',
                   'width': w + 'px',
-                  'margin': '0px'
+                  'margin': '0'
                 });
 
                 filler.appendTo($self);
