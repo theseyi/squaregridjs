@@ -104,7 +104,7 @@
            * Push our promoted sizes into our sizes array ( this is for counting )
            */
           for (var i = 0; i < settings.promoted.length; i++) {
-            settings.sizes.push([settings.promoted[i][0], settings.promoted[i][1]])
+            settings.sizes.push([settings.promoted[i][0], settings.promoted[i][1]]);
           }
 
           /*
